@@ -1,228 +1,390 @@
-# WortPort General Programming Collaboration Specification v1.1
+# WortPort General Programming Collaboration Guidelines v1.1
 
 [English](README.md) | [中文](README-CN.md)
 
-This document outlines coding collaboration guidelines to help WaterPor Studio developers work together efficiently and produce high-quality code.
+This is a guideline on how to collaborate on writing code, designed to help developers in the WaterPort studio better collaborate and produce high-quality code.
 
 ---
 
 ## Table of Contents
 
-- [1. Code Style](#1-code-style)
-  - [1.1. Internal Functions/Classes](#11-internal-functionsclasses)
-  - [1.2. Class Naming Conventions](#12-class-naming-conventions)
-  - [1.3. Function Standards](#13-function-standards)
-  - [1.4. Variable Naming Conventions](#14-variable-naming-conventions)
-  - [1.5. Other Comments](#15-other-comments)
-  - [1.6. Creating Instances](#16-creating-instances)
-  - [1.7. Function/Variable Naming Suggestions](#17-functionvariable-naming-suggestions)
-  - [1.8. Encapsulating Code with Classes/Functions](#18-encapsulating-code-with-classesfunctions)
-- [2. Code Management](#2-code-management)
-  - [2.1. Storage and Sharing](#21-storage-and-sharing)
-  - [2.2. Directory Structure](#22-directory-structure)
-  - [2.3. File Naming](#23-file-naming)
-  - [2.4. Actions](#24-actions)
-  - [2.5. main.py](#25-mainpy)
-- [3. GitHub Standards](#3-github-standards)
-  - [3.1. Commit Standards](#31-commit-standards)
-  - [3.2. Branch Management](#32-branch-management)
-  - [3.3. Source Code Submissions](#33-source-code-submissions)
-  - [3.4. Pull Requests](#34-pull-requests)
-  - [3.5. Issues](#35-issues)
-- [4. Collaboration Methods](#4-collaboration-methods)
-  - [4.1. Scope](#41-scope)
-  - [4.2. Integration Guidelines](#42-integration-guidelines)
+- [1. Code Style](#1-Code Style)
+  - [1.1. Internal-Functions/Classes](#11-内部函数/类)
+  - [1.2. Class Naming Conventions](#12-类命名规范)
+  - [1.3. Function Naming Conventions](#13-函数规范)
+  - [1.4. Variable Naming Conventions](#14-变量命名规范)
+  - [1.5. Other Comments](#15-其它注释)
+  - [1.6. Instantiating Objects](#16-创建实例)
+  - [1.7. Function/Variable Naming Suggestions](#17-函数/变量命名建议)
+  - [1.8. Encapsulating Code in Classes and Functions](#18-用类和函数包括代码)
+- [2. Code Management](#2-代码管理)
+  - [2.1. Storage and Sharing](#21-存储与共享)
+  - [2.2. File Directory Structure](#22-文件目录结构)
+  - [2.3. File Naming](#23-文件命名)
+  - [2.4. Actions](#24-Actions)
+  - [2.5. main.py](#25-main.py)
+- [3. Github Guidelines](#3-Github规范)
+  - [3.1. Commit Guidelines](#31-提交规范)
+  - [3.2. Branch Management](#32-分支管理)
+  - [3.3. Source Code Commit](#33-源代码提交)
+  - [3.4. Pull Request](#34-Pull-Request)
+  - [3.5. Issue](#35-Issue)
+- [4. Collaboration Methods](#4-协作方法)
+  - [4.1. Scope](#41-范围)
+  - [4.2. Integration Guidelines](#42-对接说明)
 
 ---
 
 ## 1. Code Style
 
-### 1.1. Internal Functions/Classes
-- Prefix internal functions/classes (meant only for internal use within a class) with `_`, e.g., `_MyClass` or `_MyFunction`.  
-- Public functions/classes (needed by other developers) follow standard naming conventions (see [1.2](#12-class-naming-conventions), [1.3](#13-function-standards)).
+### 1.1. Internal-Functions/Classes
+For internal functions (functions that other members do not need to know about, and are used only within the class), use an underscore prefix, such as `_MyClass` or `_MyFunction`. Public functions that need to be understood by other developers should follow the general naming conventions (see 1.2, 1.3).
 
 ### 1.2. Class Naming Conventions
-- Use **PascalCase** (e.g., `MyClass`, `MyFunction`).  
-  ```python
-  # Correct
-  class MyClass:
-      pass
+#### Class Naming Method:
+- All class names must follow Pascal Case naming conventions, with the first letter capitalized, such as `MyClass`, `MyFunction`.
+For example:
+```python
+# Pascal Case Naming Convention
+class MyClass:
+    pass
+```
+Instead of:
+```python
+# snake_case Naming Convention
+class my_class:
+    pass
+```
 
-  # Incorrect (snake_case)
-  class my_class:
-      pass
-  ```
-- For internal classes, prefix with `_`:  
-  ```python
-  class _MyClass:
-      pass
-  ```
-- Avoid excessively long names (>40 chars). Split or abbreviate if needed:  
-  ```python
-  # Bad
-  class _DatabaseManager_Account:
-      pass
+- For classes that do not need to be accessed by other members, add an underscore before the class name, such as `_MyClass`, `_MyFunction`. This avoids confusion with public members and signifies that the class or function is for internal use. This is a common convention to indicate that a class or function is "internal," meaning it should not be accessed externally. Although Python does not enforce access restrictions with a single underscore, it is commonly used in many codebases.
+For example:
+```python
+# Pascal Case Naming Convention
+class _MyClass:
+    pass
+```
 
-  # Good
-  class _DBManager:
-      class Account:  # Subclasses need no underscore
-          pass
-  ```
-
-### 1.3. Function Standards
-- **Naming**:  
-  - Use **snake_case** (e.g., `add_account`) or **camelCase** (e.g., `addAccount`).  
-  - Avoid ambiguous names like `databaseAccountAdd`; prefer:  
-    ```python
-    def db_add_account():
+- Class names should not exceed a certain length. If necessary, abbreviate or split the class into multiple parts.
+For example, for this case:
+```python
+class _DatabaseaManager_Account:
+    pass
+```
+It can be changed to:
+```python
+class _DBManager:
+    class Account: # For internal subclasses, the underscore prefix is not necessary
         pass
-    ```
-  - For reusable logic, encapsulate in classes:  
-    ```python
-    class AccountAdder:
-        def __init__(self, connection: MySQLConnection, ...) -> None:
-            ...
-        def add_account(self) -> bool:
-            ...
-    ```
-- **Documentation**:  
-  - Public functions **must** include docstrings:  
-    ```python
-    def draw_rect(screen, x: int, y: int, rgb: tuple = (0, 0, 0)) -> None:
-        """
-        Draws a rectangle on a Pygame screen without refreshing the display.
+```
 
-        Args:
-            screen: Pygame screen object.
-            x (int): Top-left x-coordinate.
-            y (int): Top-left y-coordinate.
-            rgb (tuple): RGB color (default: black).
-        """
-    ```
-- **Type Hints**: Always annotate parameters and return types:  
-  ```python
-  def get_user(id: int) -> User | None:
-      ...
-  ```
+- Further rules will be added as needed.
+
+### 1.3. Function Naming Conventions
+#### Function Naming Method:
+Generally, function naming follows the same rules as class naming, but with the following differences:
+- The first letter should be lowercase.
+- Function names can use either Pascal Case or snake_case, such as `MyFunction` or `my_function`.
+```python
+def database_account_add():
+    pass
+def databaseAccountAdd():
+    pass
+```
+However, this style tends to look unappealing and reduces code readability.
+Thus, it is recommended to write like:
+```python
+def DB_addAccount():
+    pass
+def add_user():
+    pass
+# Or add a parent class
+class _DatabaseManager:
+    def addAccount():
+        pass
+```
+The most recommended approach:
+```python
+# file path: Project/common/addAccount.py
+class AccountAdder:
+    def __init__(self, connection: MySQLConnection, username: str, password: str) -> None:
+        ...
+    def addAccount(self) -> bool:
+        ...
+
+# External file usage:
+from Project.common.addAccount import AccountAdder
+
+result = AccountAdder(
+    connection=connection,
+    username=username,
+    password=password
+).addAccount()
+```
+
+- Functions exposed to other members must include a detailed string comment, including: function description, usage, return values, Args, etc.
+```python
+def screen_rect(self, screen, x: int, y: int, ..., RGB: tuple=(0,0,0)) -> None:
+'''
+This function draws a rectangle on the pygame screen object, but does not refresh the display.
+It allows you to quickly and easily draw rectangles without manually calling pygame.draw.rect().
+No return value.
+
+Example:
+- screen_rect(screen, x, y, ...)
+
+Args:
+- screen: pygame screen object
+- x: x-coordinate of the rectangle's top-left corner
+- y: y-coordinate of the rectangle's top-left corner
+- ... # Other parameters, like width, height, RGB, etc., should be completed in actual use
+- RGB: Rectangle color, default is black
+'''
+    ... # Function implementation
+```
+You can write the code first and then add comments, but always remember to add the comments.
+
+- Function definitions must include parameter and return type annotations, such as `def my_function(my_parameter: int) -> None:`.
+You can also use libraries to define types:
+```python
+from mysql.connector import MySQLConnection
+def my_function(Args: any) -> MySQLConnection.cursor:
+    ...
+```
+
+- Function names should not exceed 40 characters, and should be as concise as possible.
 
 ### 1.4. Variable Naming Conventions
-- Use **snake_case** for variables (e.g., `user_count`).  
-- Annotate types when assigning from dynamic sources:  
-  ```python
-  count: int = get_total()
-  name: str = "Alice"
-  ```
+Variable naming conventions are similar to function naming, but when the following situations occur:
+- A variable is assigned to another variable.
+- A variable is assigned a value from a function/class without a clearly defined return type.
+If the type of the assigned variable is a common type (such as int, str, list, dict, etc.), it should be annotated, for example:
+```python
+var1: int = anumber
+var2: str = aFunReturnStr()
+```
 
 ### 1.5. Other Comments
-- In `main.py` or similar entry files, use high-level comments to explain core logic.
+Generally, in source files like `main.py`, the referenced parts are less frequent or even absent, so comments in these files should provide an overview and clearly express the core logic of the program.
 
-### 1.6. Creating Instances
-- Cache frequently used class instances to optimize performance:  
-  ```python
-  # Bad: Creates new instance per loop
-  for x, y in data:
-      MyClass(x, y).do_something()
+### 1.6. Instantiating Objects
+For classes/functions that are frequently called and do not need to be changed, instantiate objects to optimize performance. For example:
 
-  # Good: Reuse instance
-  processor = MyClass(x, y)
-  for x, y in data:
-      processor.do_something()
-  ```
+Class object:
+```python
+class MyClass(FatherClass):
+    def __init__(self, arg1, arg2) -> None:
+        self.arg1 = arg1
+        self.arg2 = arg2
+    def objectA(self) -> type:
+        ...
+        return result
+```
+Before optimization:
+```python
+for arg1, arg2 in alist:
+    MyClass(arg1, arg2).objectA().doSomething()
+```
+After optimization:
+```python
+objectA_instance = MyClass(arg1, arg2).objectA()
+for arg1, arg2 in alist:
+    objectA_instance.doSomething()
+```
 
 ### 1.7. Function/Variable Naming Suggestions
-- Single-word names: lowercase (`count`, `num`).  
-- Multi-word names:  
-  - **PascalCase** for 2–3 words (e.g., `CalculateScore`).  
-  - **snake_case** for action-based names (e.g., `draw_screen`).  
-- Avoid generic names like `manager` or `temp`.
+For functions and variables, the following naming methods are recommended:
+- Single-word variables should be lowercase or abbreviated (e.g., `number`, `num`).
+- For functions/variables composed of 2-3 words, use Pascal case, such as `MyFunction`, `MyFirstVariable`.
+- For repeated naming like object + process, use snake_case, such as `screen_draw`, `screen_delete`.
+- For instance variables (bound to the object instance, like `self`) or global variables, avoid using overly simple or generic names like `cat`, `num`, `manager`, as they can be unclear, especially for external functions/variables.
 
-### 1.8. Encapsulating Code with Classes/Functions
-- **Never** write spaghetti code like this:  
-  ```python
-  # BAD: Unstructured nested loops/conditions
-  if x == 0:
-      while y < 10:
-          for i in range(5):
-              ...
-  ```
-- **Do** encapsulate logic:  
-  ```python
-  class DatabaseManager:
-      def __init__(self, connection):
-          self.connection = connection
-      def add_user(self, username: str) -> bool:
-          ...
-  ```
+### 1.8. Encapsulating Code in Classes and Functions
+**Never put this kind of chaotic, unorganized code in the WaterPort library :)**
+```python
+import math, pygame, random, time
+import sys, os, json, shutil, datetime
+
+x = 0
+y = 1
+z = 2
+a = 3
+b = 4
+c = 5
+
+if x == 0:
+    if y == 1:
+        while z < 10:
+            for i in range(5):
+                if a == 3:
+                    if b == 4:
+                        while c < 7:
+                            for j in range(3):
+                                if x == 0:
+                                    if y == 1:
+                                        while z < 8:
+                                            for k in range(4):
+                                                if a == 3:
+                                                    if b == 4:
+                                                        while c < 6:
+                                                            for l in range(2):
+                                                                if x == 0:
+                                                                    if y == 1:
+                                                                        while z < 9:
+                                                                            for m in range(3):
+                                                                                if a == 3:
+                                                                                    if b == 4:
+                                                                                        while c < 5:
+                                                                                            print("Deep Loop!")
+                                                                                            c += 1
+                                                                                        c -= 1
+                                                                                    
+                                                c += 1
+                                            z += 1
+                                        z -= 1
+                                    y += 1
+                                a += 1
+                            z -= 1
+                        b += 1
+                    a -= 1
+                y -= 1
+            z -= 1
+        x += 1
+```
+**If you see this chaotic, unstructured code without using classes or functions, you should address it immediately:)**
+__Except for flask__.
+
+For code that needs to be reused multiple times, encapsulate it into classes or functions, such as:
+```python
+class DatabaseManager:
+    def __init__(self, connection: MySQLConnection) -> None:
+        self.connection = connection
+    def addAccount(self, username: str, password: str) -> bool:
+        ...
+    def checkAccount(self, username: str, password: str) -> bool:
+        ...
+```
+This way, in other files, you can directly call its methods without repeating the same code. The same applies to functions exposed to other members.
 
 ---
 
 ## 2. Code Management
-
 ### 2.1. Storage and Sharing
-- All code must be stored in **GitHub** for team access.
+All code must be stored in a Github repository for team members to share and collaborate.
 
-### 2.2. Directory Structure
+### 2.2. File Directory Structure
+All files should follow the directory structure method as much as possible:
+
 ```
-Project/
-├─ .env                  # Environment config
-├─ assets/               # Static files (images, fonts, etc.)
-├─ src/                  # Main code
-│  ├─ common/            # Shared modules
-│  ├─ server/            # Backend logic
-│  └─ ...
-├─ tests/                # Unit tests
-└─ requirements.txt      # Dependencies
+Project
+├─ .env                  # Environment configuration file
+├─ assets                # Static resources
+│  ├─ audios             # Audio files
+│  │  └─ audios.wav
+│  ├─ fonts              # Font files
+│  │  └─ fonts.ttf
+│  └─ images             # Image resources
+│     └─ ico
+│        └─ icon.jpg
+├─ config                # Configuration files
+│  └─ config.ini
+├─ docs                  # Project documentation
+│  └─ How_to_use.txt
+├─ src                   # Main application code
+│  ├─ __init__.py        # Initialization file
+│  ├─ common             # Common modules
+│  │  └─ data.py
+│  ├─ controller         # Controller modules
+│  │  └─ flask.py
+│  ├─ server             # Server-related modules
+│  │  ├─ app.py
+│  │  └─ model           # Model modules
+│  │     ├─ addAccount.py
+│  │     └─ checkAccount.py
+│  ├─ examples           # Example code
+│  │  └─ simple_example.py
+│  ├─ spawn.py           # Startup/initialization script
+│  ├─ utils              # Utility modules
+│  │  ├─ realtime.py
+│  │  ├─ tool.py
+│  │  └─ __init__.py
+├─ tests                 # Test files
+│  └─ test.py
+├─ versions              # Version management
+│  └─ v1.0
+│     └─ ...
+├─ scripts               # Startup scripts
+│  ├─ start.bat
+│  └─ start.sh
+├─ README.md             # Project description document
+├─ icon.ico              # Icon file
+├─ LICENSE               # License
+├─ requirements.txt      # Dependencies file
+├─ setup.py              # Project installation script
+└─ main.py               # Main program entry
 ```
+
+Before running the project, first run `pip install -r requirements.txt` to install dependencies,
+and then `pip install -e .` to install the project.
 
 ### 2.3. File Naming
-- Use **PascalCase** for filenames (e.g., `AccountManager.py`).
+All file names should follow Pascal Case naming conventions, such as `MyClass`, `MyFunction`.
 
 ### 2.4. Actions
-- All CI/CD workflows (e.g., testing) must run via GitHub Actions.
+All operation tests must be uploaded to Github, and an automatic email should notify other members. (In the future, we will add features such as WeChat, SMS, and QQ notifications.)
 
 ### 2.5. main.py
-- Keep `main.py` minimal (initialization only). Delegate logic to other modules.
+The content of the `main.py` file should be kept as simple as possible, containing only startup and initialization code for easy future expansion, maintenance, and code management.
+For example, a program with both UI and backend (very simple case) can import `index.py` into `main.py`, and import some modules from `backend.py` into `index.py` (to avoid circular imports):
+```
+src
+├─ main.py               # Main program entry
+├─ index.py              # UI part
+├─ backend.py            # Backend part
+└─ common                # Common modules
+```
 
----
-
-## 3. GitHub Standards
-
-### 3.1. Commit Standards
-- Test locally before pushing.  
-- Write descriptive commit messages.
+## 3. Github Guidelines
+### 3.1. Commit Guidelines
+After local testing passes, upload the code to the Github repository, create a new branch, and submit the code with detailed commit messages for easy future tracking. After automatic testing via Github Actions, you can ensure double safety.
 
 ### 3.2. Branch Management
-- Prefix branches with purpose:  
-  - `feature/login`  
-  - `bugfix/header-align`  
-- Merge to `main` after review.
+When committing code to the Github repository, create a new branch, such as `feature-xxx`, `bugfix-xxx`, `hotfix-xxx`, etc., to facilitate team collaboration and code management.
+Once the code is confirmed to be correct, merge the branch into the main branch `main`.
+Tips: Currently, there is no strict requirement for branch management because I am too lazy to do it lol:)
 
-### 3.3. Source Code Submissions
-- Document public API changes in commit messages.
+### 3.3. Source Code Commit
+For changes to the `src` directory, include a brief description of the changes in the external interface in the commit message. Commits without descriptions will be considered internal modifications or changes that do not need to be understood by others.
 
-### 3.4. Pull Requests
-- Require PR reviews before merging to `main`.
+### 3.4. Pull Request
+If a new branch is created, before merging into the main branch, create a Pull Request for other members to review the code and ensure its quality.
 
-### 3.5. Issues
-- Use GitHub Issues for bugs/feature requests.
+### 3.5. Issue
+For external bugs, suggestions, requests, etc., create an Issue for team discussion and resolution.
 
 ---
 
 ## 4. Collaboration Methods
-
 ### 4.1. Scope
-- Define responsibilities in `README.md`:  
-  ```markdown
-  ## Team Roles
-  - **Alice**: UI (login, settings)
-  - **Bob**: Backend APIs
-  ```
+In the `README.md` file in the project root directory, list each person's basic work scope, such as:
+```markdown
+# Project Member Responsibilities
+## Nabil
+- Main UI (Main screen, login screen, level selection screen, settings screen, etc.)
+## Vue
+- Game content UI and generation algorithm
+- Network backend and maintenance
+- Some utils
+```
+Responsibility areas are not mandatory but are meant to help team members understand each other's work to avoid redundant work and logical conflicts. Areas not considered or new areas can be discussed and assigned together.
 
 ### 4.2. Integration Guidelines
-- Document interfaces in `docs/`:  
-  ```
-  docs/
-  ├─ api.md              # Backend endpoints
-  ├─ ui.md               # UI components
-  └─ ...
-  ```
+To facilitate code integration between developers, create an integration document in the project's `doc` directory to detail the interfaces and calling methods of each module. The document should include external interfaces for each part/module and the main program logic, like:
+```
+doc
+├─ main.md
+├─ backend.md
+├─ utils.md
+├─ server.md
+└─ utils.md
+```
+All should be in markdown format, which can be viewed directly on Github. (Shouldn't be too hard to write markdown, right?)
