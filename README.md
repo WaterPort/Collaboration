@@ -160,8 +160,8 @@ Variable naming conventions are similar to function naming, but when the followi
 - A variable is assigned a value from a function/class without a clearly defined return type.
 If the type of the assigned variable is a common type (such as int, str, list, dict, etc.), it should be annotated, for example:
 ```python
-var1: int = anumber
-var2: str = aFunReturnStr()
+var1: int = a_number
+var2: str = a_fun_return_str()
 ```
 
 ### 1.5. Other Comments
