@@ -100,7 +100,7 @@ def add_user():
     pass
 # Or add a parent class
 class _DatabaseManager:
-    def addAccount():
+    def add_Account():
         pass
 ```
 The most recommended approach:
@@ -109,7 +109,7 @@ The most recommended approach:
 class AccountAdder:
     def __init__(self, connection: MySQLConnection, username: str, password: str) -> None:
         ...
-    def addAccount(self) -> bool:
+    def add_Account(self) -> bool:
         ...
 
 # External file usage:
@@ -119,7 +119,7 @@ result = AccountAdder(
     connection=connection,
     username=username,
     password=password
-).addAccount()
+).add_Account()
 ```
 
 - Functions exposed to other members must include a detailed string comment, including: function description, usage, return values, Args, etc.
@@ -176,18 +176,18 @@ class MyClass(FatherClass):
     def __init__(self, arg1, arg2) -> None:
         self.arg1 = arg1
         self.arg2 = arg2
-    def objectA(self) -> type:
+    def object_A(self) -> type:
         ...
         return result
 ```
 Before optimization:
 ```python
 for arg1, arg2 in alist:
-    MyClass(arg1, arg2).objectA().doSomething()
+    MyClass(arg1, arg2).object_A().doSomething()
 ```
 After optimization:
 ```python
-objectA_instance = MyClass(arg1, arg2).objectA()
+objectA_instance = MyClass(arg1, arg2).object_A()
 for arg1, arg2 in alist:
     objectA_instance.doSomething()
 ```
