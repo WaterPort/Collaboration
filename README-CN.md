@@ -96,13 +96,13 @@ def databaseAccountAdd():
 但这种方式显然看着很难看，代码可阅读性低。
 因此建议写为：
 ```python
-def DB_addAccount():
+def DB_add_Account():
     pass
 def add_user():
     pass
 #或者添加父类
 class _DatabaseManager:
-    def addAccount():
+    def add_Account():
         pass
 ```
 最推荐的写法：
@@ -111,7 +111,7 @@ class _DatabaseManager:
 class AccountAdder:
     def __init__(self, connection: MySQLConnection, username: str, password: str) -> None:
         ...
-    def addAccount(self) -> bool:
+    def add_Account(self) -> bool:
         ...
 
 # 外部文件调用方法：
@@ -121,7 +121,7 @@ result = AccountAdder(
     connection=connection,
     username=username,
     password=password
-).addAccount()
+).add_Account()
 
 ```
 
@@ -165,8 +165,8 @@ def my_function(Args: any) -> MySQLConnection.cursor:
 - 一个变量被没有明确返回值类型的函数/类所赋值时
 如果该变量被赋值后的类型为常见的变量类型（如int、str、list、dict等），需要标注类型，如：
 ```python
-var1: int = anumber
-var2: str = aFunReturnStr()
+var1: int = a_number
+var2: str = a_fun_return_str()
 ```
 
 
@@ -184,7 +184,7 @@ class MyClass(FatherClass):
         # 一般来说__init__()都不可能会返回值，但为了统一美观，还是在其后加上了"-> None"
         self.arg1 = arg1
         self.arg2 = arg2
-    def objectA(self) -> type:
+    def object_A(self) -> type:
         ...
         return result
 ```
@@ -192,20 +192,20 @@ class MyClass(FatherClass):
 ```python
 for arg1, arg2 in alist:
     # 这样以来每次调用该类都会创建一个新的实例
-    MyClass(arg1, arg2).objectA().doSomething()
+    MyClass(arg1, arg2).object_A().do_something()
 ```
 优化后：
 ```python
-objectA_instance = MyClass(arg1, arg2).objectA()
+objectA_instance = MyClass(arg1, arg2).object_A()
 for arg1, arg2 in alist:
-    objectA_instance.doSomething()
+    objectA_instance.do_something()
 ```
 
 
 ### 1.7. 函数/变量命名建议
 对于函数、变量，推荐使用以下方法命名：
 - 只有一个单词的变量全小写或简写，无需更改（如`number`、`num`等）
-- 对于2~3个的单词构成的函数/变量建议使用Pascal命名法，如`MyFunction`、`MyFirstVariable`。
+- 对于2个的单词构成的函数/变量可以使用Pascal命名法，如`MyFunction`。
 - 对于多次参与命名，格式形如 object + process 的，使用snake_case命名法，如`screen_draw`、`screen_delete`。
 - 对于实例变量（绑定到对象实例（如self）的变量）或全局变量，不可使用`cat`、`num`、`manager`等通用或过于简单，导致意义不明的变量名，尤其是对外开放的函数/变量。
 
